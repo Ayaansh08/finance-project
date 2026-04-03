@@ -1,0 +1,102 @@
+{
+  "name": "Finance Project API",
+  "version": "1.0.0",
+  "baseUrl": "http://localhost:4000",
+  "authentication": {
+    "type": "Bearer JWT",
+    "header": "Authorization: Bearer <token>"
+  },
+  "endpoints": [
+    {
+      "method": "POST",
+      "path": "/auth/register",
+      "description": "Register a new user",
+      "authRequired": false,
+      "requestBody": {
+        "email": "new.user@test.com",
+        "password": "123456"
+      },
+      "responseExample": {
+        "id": "clx123...",
+        "email": "new.user@test.com",
+        "role": "VIEWER",
+        "isActive": true
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/auth/login",
+      "description": "Authenticate and receive JWT token",
+      "authRequired": false,
+      "requestBody": {
+        "email": "admin@test.com",
+        "password": "123456"
+      },
+      "responseExample": {
+        "token": "<jwt>",
+        "user": {
+          "id": "clx123...",
+          "email": "admin@test.com",
+          "role": "ADMIN"
+        }
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/records",
+      "description": "List records with filters and pagination",
+      "authRequired": true,
+      "roles": ["ANALYST", "ADMIN"],
+      "query": {
+        "type": "INCOME|EXPENSE",
+        "category": "string",
+        "startDate": "YYYY-MM-DD",
+        "endDate": "YYYY-MM-DD",
+        "page": "number",
+        "limit": "number"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/records",
+      "description": "Create a financial record",
+      "authRequired": true,
+      "roles": ["ADMIN"]
+    },
+    {
+      "method": "PATCH",
+      "path": "/records/:id",
+      "description": "Update a record",
+      "authRequired": true,
+      "roles": ["ADMIN"]
+    },
+    {
+      "method": "DELETE",
+      "path": "/records/:id",
+      "description": "Delete a record",
+      "authRequired": true,
+      "roles": ["ADMIN"]
+    },
+    {
+      "method": "GET",
+      "path": "/dashboard/summary",
+      "description": "Get total income, expense and net balance",
+      "authRequired": true,
+      "roles": ["VIEWER", "ANALYST", "ADMIN"]
+    },
+    {
+      "method": "GET",
+      "path": "/dashboard/category",
+      "description": "Get category totals (optional type filter)",
+      "authRequired": true,
+      "roles": ["VIEWER", "ANALYST", "ADMIN"]
+    },
+    {
+      "method": "GET",
+      "path": "/dashboard/trends",
+      "description": "Get monthly income/expense trends",
+      "authRequired": true,
+      "roles": ["VIEWER", "ANALYST", "ADMIN"]
+    }
+  ]
+}
