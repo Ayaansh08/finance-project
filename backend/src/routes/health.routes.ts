@@ -1,9 +1,10 @@
 import { Router } from "express";
 
-import { healthCheck } from "../controllers/health.controller";
+import { healthCheck, uptimePing } from "../controllers/health.controller";
 
 const healthRouter = Router();
 
 healthRouter.get("/health", healthCheck);
+healthRouter.get("/uptime", uptimePing);
 
 export { healthRouter };

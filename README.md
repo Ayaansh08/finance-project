@@ -335,6 +335,11 @@ Response `200`:
 - `GET /dashboard/category` (optional `type=INCOME|EXPENSE`)
 - `GET /dashboard/trends`
 
+### Uptime / Health
+
+- `GET /health` (detailed JSON health response)
+- `GET /uptime` (lightweight `200 ok` text response for uptime monitors)
+
 Response example (`GET /dashboard/summary`):
 
 ```json
