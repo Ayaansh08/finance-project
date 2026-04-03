@@ -78,6 +78,70 @@ finance-project/
       utils/
 ```
 
+## Application Flow (How It Works)
+
+### 1. Authentication Flow
+
+1. User submits credentials from frontend `Login` page.
+2. Backend validates payload with Zod.
+3. Backend verifies user/password and account status.
+4. Backend signs JWT (`id`, `role`) and returns token + user profile.
+5. Frontend stores token and attaches it to all API calls via Axios interceptor.
+
+### 2. Authorization Flow (RBAC)
+
+1. Protected routes pass through `authenticate` middleware.
+2. JWT is verified and decoded into `req.user`.
+3. `allowRoles(...)` middleware checks if user role is allowed for the route.
+4. Request is rejected with `401/403` when invalid.
+
+### 3. Records Flow
+
+1. Frontend sends filter/pagination query (`type`, `category`, `startDate`, `endDate`, `page`, `limit`).
+2. Controller validates query/body with Zod schemas.
+3. Service builds Prisma query (`where`, `skip`, `take`).
+4. API returns records with pagination metadata.
+
+### 4. Insights Flow
+
+1. Frontend calls summary/category/trends endpoints.
+2. Service computes:
+   - total income/expense/net via Prisma `aggregate`
+   - category totals via `groupBy`
+   - monthly trends via SQL aggregation query
+3. UI renders cards and charts.
+
+### 5. Error Flow
+
+1. Service/controller throws typed errors (`AppError`) or validation errors.
+2. Global error middleware maps errors to HTTP status and consistent response shape.
+3. Frontend shows user-friendly messages.
+
+## Quick Evaluation Walkthrough (Suggested)
+
+Use this sequence for internship review:
+
+1. Run backend + frontend.
+2. Login as `viewer@test.com` and verify:
+   - dashboard/insights visible
+   - no records write actions
+3. Login as `analyst@test.com` and verify:
+   - records listing works
+   - create/update/delete not available
+4. Login as `admin@test.com` and verify:
+   - full records CRUD
+   - user management routes and UI
+5. Check API behavior with invalid payload/token and confirm proper status codes.
+6. Run backend tests (`npm run test:backend`) and build (`npm run build`).
+
+## Architecture Notes for Evaluation
+
+- Layered backend design: `routes -> controllers -> services -> prisma`
+- Controllers are thin (validation + orchestration), business logic is in services.
+- Validation is centralized with Zod schemas.
+- Access control is centralized in auth and role middlewares.
+- Prisma schema uses enums, relations, and indexes suitable for dashboard queries.
+
 ## Setup Instructions
 
 ### 1. Install Dependencies (Root)
