@@ -44,7 +44,7 @@
     {
       "method": "GET",
       "path": "/records",
-      "description": "List records with filters and pagination",
+      "description": "List records with filters and pagination (ANALYST and ADMIN can read all records)",
       "authRequired": true,
       "roles": ["ANALYST", "ADMIN"],
       "query": {

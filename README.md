@@ -286,7 +286,7 @@ Response example (`GET /dashboard/summary`):
 | Role    | Dashboard/Insights | Read Records | Create/Update/Delete Records | Manage Users |
 |---------|--------------------|--------------|-------------------------------|--------------|
 | VIEWER  | Yes                | No           | No                            | No           |
-| ANALYST | Yes                | Yes          | No                            | No           |
+| ANALYST | Yes                | Yes (all records) | No                        | No           |
 | ADMIN   | Yes                | Yes          | Yes                           | Yes          |
 
 ## Testing
@@ -360,7 +360,7 @@ Sample error response:
 ## Assumptions
 
 - Each record belongs to a single user.
-- Non-admin users can only access their own record scope.
+- Analysts have read access to all records; admins have full access.
 - Admin is trusted with full records and user management operations.
 - Seed data is deterministic and intended for local/demo evaluation.
 - PostgreSQL is available locally or through Docker.

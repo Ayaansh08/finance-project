@@ -57,7 +57,9 @@ const ensureAccessToRecord = async (recordId: string, actor: RecordsActor) => {
     throw new AppError("Record not found", 404);
   }
 
-  if (actor.role !== "ADMIN" && record.userId !== actor.id) {
+  const canReadAll = actor.role === "ADMIN" || actor.role === "ANALYST";
+
+  if (!canReadAll && record.userId !== actor.id) {
     throw new AppError("Forbidden", 403);
   }
 
@@ -69,9 +71,10 @@ export const listRecordsForUser = async (
   query: ListRecordsQuery,
 ): Promise<ListRecordsResult> => {
   const { type, category, startDate, endDate, page, limit } = query;
+  const canReadAll = actor.role === "ADMIN" || actor.role === "ANALYST";
 
   const where: Prisma.RecordWhereInput = {
-    ...(actor.role === "ADMIN" ? {} : { userId: actor.id }),
+    ...(canReadAll ? {} : { userId: actor.id }),
     ...(type ? { type } : {}),
     ...(category ? { category } : {}),
     ...(startDate || endDate
